@@ -36,6 +36,32 @@
     mobileNavToggleBtn.addEventListener('click', mobileNavToogle);
   }
 
+  // Defensive fallback: ensure clicks on the hamburger always toggle mobile nav
+  document.addEventListener('click', function(e) {
+    var toggle = e.target.closest('.mobile-nav-toggle');
+    if (!toggle) return;
+    // run the same toggle logic but ensure the menu UL is visible/hidden reliably
+    try {
+      var body = document.querySelector('body');
+      body.classList.toggle('mobile-nav-active');
+      var icon = document.querySelector('.mobile-nav-toggle');
+      if (icon) {
+        icon.classList.toggle('bi-list');
+        icon.classList.toggle('bi-x');
+      }
+      var navUL = document.querySelector('.navmenu > ul');
+      if (navUL) {
+        if (body.classList.contains('mobile-nav-active')) {
+          navUL.style.display = 'block';
+        } else {
+          navUL.style.display = 'none';
+        }
+      }
+    } catch (err) {
+      // silent fail
+    }
+  });
+
   /**
    * Hide mobile nav on same-page/hash links
    */
